@@ -6,6 +6,15 @@ import '../extensions/string/name_formatting_extension.dart';
 import 'reference.dart';
 
 class ColumnData {
+  final String name;
+
+  final Type? type;
+  final bool nullable;
+  final String? defaultValue;
+  final bool primaryKey;
+  final bool unique;
+  final String? check;
+  final List<Reference>? foreignKeys;
   const ColumnData({
     required this.name,
     required this.type,
@@ -16,38 +25,6 @@ class ColumnData {
     this.check,
     this.foreignKeys = const [],
   });
-
-  final String name;
-  final Type? type;
-  final bool nullable;
-  final String? defaultValue;
-  final bool primaryKey;
-  final bool unique;
-  final String? check;
-  final List<Reference>? foreignKeys;
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': formattedName,
-      'type': finalizedType.toString(),
-      'nullable': nullable,
-      'default': defaultValue,
-      'primaryKey': primaryKey,
-      'foreign_keys': foreignKeys,
-      // TODO: need to test and rollout
-      // 'unique': unique,
-      // 'check': check,
-    };
-  }
-
-  Type get finalizedType => type ?? String;
-  String get formattedName {
-    final result = name.toSnakeCased;
-    if (result == null) {
-      throw Exception('Unsupported Column name - $name');
-    }
-    return result;
-  }
 
   factory ColumnData.fromMap(Map<String, dynamic> map) {
     return ColumnData(
@@ -67,20 +44,25 @@ class ColumnData {
     );
   }
 
-  ColumnData copyWith({
-    String? name,
-    Type? type,
-    bool? nullable,
-    String? defaultValue,
-    bool? primaryKey,
-  }) {
-    return ColumnData(
-      name: name ?? this.name,
-      type: type ?? this.type,
-      nullable: nullable ?? this.nullable,
-      defaultValue: defaultValue ?? this.defaultValue,
-      primaryKey: primaryKey ?? this.primaryKey,
-    );
+  Type get finalizedType => type ?? String;
+  String get formattedName {
+    final result = name.toSnakeCased;
+    if (result == null) {
+      throw Exception('Unsupported Column name - $name');
+    }
+    return result;
+  }
+
+  @override
+  int get hashCode {
+    return name.hashCode ^
+        type.hashCode ^
+        nullable.hashCode ^
+        defaultValue.hashCode ^
+        primaryKey.hashCode ^
+        unique.hashCode ^
+        check.hashCode ^
+        foreignKeys.hashCode;
   }
 
   @override
@@ -98,17 +80,35 @@ class ColumnData {
         listEquals(other.foreignKeys, foreignKeys);
   }
 
-  @override
-  int get hashCode {
-    return name.hashCode ^
-        type.hashCode ^
-        nullable.hashCode ^
-        defaultValue.hashCode ^
-        primaryKey.hashCode ^
-        unique.hashCode ^
-        check.hashCode ^
-        foreignKeys.hashCode;
+  ColumnData copyWith({
+    String? name,
+    Type? type,
+    bool? nullable,
+    String? defaultValue,
+    bool? primaryKey,
+  }) {
+    return ColumnData(
+      name: name ?? this.name,
+      type: type ?? this.type,
+      nullable: nullable ?? this.nullable,
+      defaultValue: defaultValue ?? this.defaultValue,
+      primaryKey: primaryKey ?? this.primaryKey,
+    );
   }
 
   String toJson() => json.encode(toMap());
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': formattedName,
+      'type': finalizedType.toString(),
+      'nullable': nullable,
+      'default': defaultValue,
+      'primaryKey': primaryKey,
+      'foreign_keys': foreignKeys,
+      // TODO: need to test and rollout
+      // 'unique': unique,
+      // 'check': check,
+    };
+  }
 }
