@@ -16,7 +16,7 @@ dart pub global activate to_sqlite
 
 ## Usage
 
-Once installed, you can start using this tool command `to_sqlite --{options} {file/path.ext}` by passing the necessary CSV file or optional configuration file `(config.json)` to customize how your CSV data is converted into an SQLite database.
+Once installed, you can start using this tool command `toSqlite --{options} {file/path.ext}` by passing the necessary CSV file or optional configuration file `(config.json)` to customize how your CSV data is converted into an SQLite database.
 
 ## What is config.json?
 
@@ -26,25 +26,25 @@ The `config.json` file is a configuration file that allows you to control how th
 
 ### Generate Config.json
 
-#### Command: `generate_config --configPath (-c)`
+#### Command: `generate_config --filePath (-f)`
 
 Path to the configuration JSON file that defines the conversion settings.
 
-Example: `to_sqlite generate_config -c ./config/config.json`
+Example: `toSqlite generate_config -f ./config/config.json`
 
 ### Generate Database.sqlite
 
-#### Command: `generate_db --csvPath (-p)`
+#### Command: `generate_db --filePath (-f)`
 
 Path to the CSV file you want to convert to SQLite. If no configuration file is provided, the tool will automatically infer the table structure from the CSV.
 
-Example: `to_sqlite generate_db -p ./data/myfile.csv`
+Example: `toSqlite generate_db -f ./data/myfile.csv`
 
 #### Or
 
 Alternatively, you can pass the config file to customize how the database is generated.
 
-Example: `to_sqlite generate_db -p ./config/config.json`
+Example: `toSqlite generate_db -f ./config/config.json`
 
 ## Additional information about `config.json`
 

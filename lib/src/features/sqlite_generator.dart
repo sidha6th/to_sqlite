@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 
 import '../base/generator/sqlite_generator.dart';
-import '../mixins/csv_parser_mixin.dart';
+import '../base/parser/csv_parser_mixin.dart';
 import '../mixins/file_mixin.dart';
 import '../mixins/logger_mixin.dart';
 import '../utils/common/constants.dart';
