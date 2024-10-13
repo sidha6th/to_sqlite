@@ -19,7 +19,6 @@ executables: bin/to_sqlite.dart
 
 dependencies:
   args: ^2.5.0
-  collection: ^1.19.0
   path: ^1.9.0
   sqlite3: ^2.4.6
 
