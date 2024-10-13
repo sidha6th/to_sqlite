@@ -1,0 +1,31 @@
+name: to_sqlite
+description:
+  A simple and efficient package to convert CSV files into SQLite databases.
+  `to_sqlite` streamlines the process of generating SQLite tables and inserting
+  bulk data, allowing you to manage large datasets with ease.
+
+  With features like type inference and automatic model class generation based
+  on your CSV structure, this package makes it easy to integrate SQLite into
+  your Dart projects. Perfect for developers looking to simplify their database
+  management tasks.
+
+version: 0.1.1
+repository: https://github.com/sidha6th/to_sqlite
+
+environment:
+  sdk: ^3.4.3
+
+executables: bin/to_sqlite.dart
+
+dependencies:
+  args: ^2.5.0
+  collection: ^1.19.0
+  path: ^1.9.0
+  sqlite3: ^2.4.6
+
+dev_dependencies:
+  dart_flutter_team_lints: ^2.1.1
+  lints: ^3.0.0
+  test: ^1.24.0
+
+license: MIT

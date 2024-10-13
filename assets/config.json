@@ -1,0 +1,81 @@
+{
+    "csv": "assets/test.csv",
+    "output_path": "assets",
+    "table_name": "test",
+    "fallback_to_string_on_nullable_value": false,
+    "enable_type_inference": true,
+    "table_columns": [
+        {
+            "name": "id",
+            "type": "int",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "name",
+            "type": "String",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "email",
+            "type": "String",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "age",
+            "type": "int",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "registration_date",
+            "type": "String",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "account_balance",
+            "type": "double",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "active",
+            "type": "bool",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "country",
+            "type": "String",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        },
+        {
+            "name": "preferences",
+            "type": "String",
+            "nullable": false,
+            "default": null,
+            "primaryKey": false,
+            "foreign_keys": []
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+id,name,email,age,registration_date,account_balance,active,country,preferences
+1,Alice Johnson,alice.johnson@example.com,28,2024-01-15,1200.50,true,USA,"reading,traveling,sports"
+2,Bob Smith,bob.smith@example.com,34,2023-11-05,800.75,false,Canada,"cooking,photography"
+3,Charlie Brown,charlie.brown@example.com,22,2022-06-20,150.00,true,UK,"music,video games,art"
+4,Diana Prince,diana.prince@example.com,31,2023-07-30,5000.25,true,Australia,"fitness,traveling"
+5,Edward Elric,edward.elric@example.com,19,2023-12-10,300.00,true,Japan,"anime,manga"
+6,Frida Kahlo,frida.kahlo@example.com,26,2024-02-22,400.00,false,Mexico,"painting,history"
+7,George Orwell,george.orwell@example.com,45,2021-08-13,980.60,true,India,"writing,reading"
+8,Hannah Arendt,hannah.arendt@example.com,38,2022-03-15,3200.45,false,Germany,"philosophy,culture"
+9,Ivan Drago,ivan.drago@example.com,29,2020-10-08,760.20,true,Russia,"boxing,fitness"
+10,Jessica,jessica@example.com,35,2023-09-29,150.00,false,France,"fashion,design"
