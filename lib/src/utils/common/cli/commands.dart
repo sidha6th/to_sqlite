@@ -4,5 +4,3 @@ class CLICommands {
   static const generationDB = 'generate_db';
   static const generateConfig = 'generate_config';
 }
-
-

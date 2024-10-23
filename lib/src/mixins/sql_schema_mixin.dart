@@ -1,29 +1,31 @@
 import '../utils/common/sql/sql_query_builder.dart';
-import '../utils/common/constants.dart';
 import '../utils/extensions/column_data_exts.dart';
 import '../utils/extensions/iterable_column_data_exts.dart';
 import '../utils/models/column_data.dart';
 
 mixin SqlSchemaMixin {
-  String generateColumnsSchema(List<ColumnData> columns) {
-    var hasAnyPrimaryKeys = false;
+  String generateColumnsSchema(
+    List<ColumnData> columns,
+    String? defaultIDColumnName,
+  ) {
     final schema = columns.map((e) {
-      hasAnyPrimaryKeys = e.primaryKey;
       return e.schema;
     }).join(',');
 
-    final finalizedSchema =
-        !hasAnyPrimaryKeys ? '${defaultID()}, $schema' : schema;
+    final schemaWithDefaultID = defaultIDColumnName == null
+        ? schema
+        : '${_defaultID(defaultIDColumnName)},$schema';
+
     final foreignKeys = columns.sqlForeignKeysStatements?.join(',');
     if (foreignKeys == null) {
-      return finalizedSchema;
+      return schemaWithDefaultID;
     }
-    return '$finalizedSchema,$foreignKeys';
+    return '$schemaWithDefaultID,$foreignKeys';
   }
 
-  String defaultID([String? name]) {
+  String _defaultID(String name) {
     return (SQL()
-          ..add(name ?? Constants.defTableIDName)
+          ..add(name)
           ..integer
           ..primaryKey
           ..autoIncrement)
@@ -49,7 +51,9 @@ mixin SqlSchemaMixin {
     /// TODO: need to change this to batch insert
     /// insted of exicuting on each iteration.
     for (var i = 0; i < values.length; i++) {
-      onEachSetValue(statement, values[i]);
+      final dif = columns.length - values[i].length;
+      final currentRow = [...values[i], ...List.filled(dif, null)];
+      onEachSetValue(statement, currentRow);
     }
   }
 

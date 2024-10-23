@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:args/args.dart';
 
-import '../../mixins/csv_parser_mixin.dart';
+import '../../base/parser/csv_parser_mixin.dart';
 import '../common/cli/commands.dart';
 import '../common/cli/options.dart';
 import '../helpers/async.dart';
@@ -10,6 +10,8 @@ import '../models/cli_config.dart';
 import '../types/global.dart';
 
 extension ArgResultsExtensions on ArgResults {
+  String get _filePath => this[CLIOptions.filePath.name] as String;
+
   Future<void> when(
     CLIConfig Function(String filePath) configCB, {
     required FutureOr<void> Function(CSVParser, CLIConfig) generateDB,
@@ -43,6 +45,4 @@ extension ArgResultsExtensions on ArgResults {
       onError: failed,
     );
   }
-
-  String get _filePath => this[CLIOptions.file.name] as String;
 }

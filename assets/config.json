@@ -3,6 +3,7 @@
     "output_path": "assets",
     "table_name": "test",
     "fallback_to_string_on_nullable_value": false,
+    "auto_incrementing_id_column_name": null,
     "enable_type_inference": true,
     "table_columns": [
         {
@@ -46,10 +47,10 @@
             "foreign_keys": []
         },
         {
-            "name": "account_balance",
             "type": "double",
             "nullable": false,
             "default": null,
+            "name": "account_balance",
             "primaryKey": false,
             "foreign_keys": []
         },

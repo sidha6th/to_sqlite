@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 
 import '../base/generator/sqlite_generator.dart';
-import '../mixins/csv_parser_mixin.dart';
+import '../base/parser/csv_parser_mixin.dart';
 import '../mixins/logger_mixin.dart';
 import '../template/generator/model_class_generator.dart';
 import '../utils/common/constants.dart';
@@ -14,7 +14,7 @@ import '../utils/models/template_generator_args/model_class.dart';
 class ModelClassGenerator with LoggerMixin implements IGenerator<CSVParser> {
   const ModelClassGenerator();
 
-  static const shared = ModelClassGenerator();
+  static const IGenerator shared = ModelClassGenerator();
 
   @override
   FutureOr<void> generate(CSVParser parser, CLIConfig args) async {
@@ -24,9 +24,11 @@ class ModelClassGenerator with LoggerMixin implements IGenerator<CSVParser> {
       onEnd: () => log('CSV parsed'),
     );
 
+    args = args.compareColumn(parsedResult.titles);
+
     await ModelClassTemplateGenerator.shared.generate(
       ModelClassTemplateArg(
-        fields: parsedResult.titles,
+        fields: args.tableColumns,
         className:
             split(withoutExtension(args.csvPath)).last.toUpperCamelCased ??
                 Constants.defModel,

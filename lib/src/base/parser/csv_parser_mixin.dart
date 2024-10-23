@@ -1,25 +1,19 @@
 import 'dart:async';
 
-import '../base/parser/parser_base.dart';
-import '../utils/common/constants.dart';
-import '../utils/extensions/string/parser_exts.dart';
-import '../utils/extensions/string/string_exts.dart';
-import '../utils/extensions/string_buffer_exts.dart';
-import '../utils/models/column_data.dart';
-import '../utils/types/csv.dart';
-import '../utils/types/global.dart';
-import 'file_mixin.dart';
-import 'type_tracker_mixin.dart';
+import '../../mixins/file_mixin.dart';
+import '../../mixins/type_tracker_mixin.dart';
+import '../../utils/common/constants.dart';
+import '../../utils/extensions/string/parser_exts.dart';
+import '../../utils/extensions/string/string_exts.dart';
+import '../../utils/extensions/string_buffer_exts.dart';
+import '../../utils/models/column_data.dart';
+import '../../utils/types/csv.dart';
+import '../../utils/types/global.dart';
+import 'parser_base.dart';
 
 final class CSVParser
     with TypeTrackerMixin, FileMixin
     implements IParser<ParsedCSVResult> {
-  CSVParser(
-    this._fallbackToString, {
-    required bool enableTypeInference,
-  })  : _enableTypeInference = enableTypeInference,
-        _valueCache = StringBuffer();
-
   /// If a value found as Type String when parsing the CSV
   /// and its empty or no value found by default it consider as nullable
   /// If [_fallbackToString] true, will assign an empty string value as default,
@@ -64,6 +58,12 @@ final class CSVParser
   bool _startedWithQuote = false;
 
   int _quoteCount = 0;
+
+  CSVParser(
+    this._fallbackToString, {
+    required bool enableTypeInference,
+  })  : _enableTypeInference = enableTypeInference,
+        _valueCache = StringBuffer();
 
 // TODO: Need to improve logic on parsing
 // It should also support parsing by reading
@@ -124,24 +124,30 @@ final class CSVParser
     return (titles: _columnsMetaData, values: _rows);
   }
 
-  /// Will track contigious quotes
-  int _trackQuotes(int i, bool Function(int i) isDoubleQuote) {
-    var quoteCount = 0;
-    while (isDoubleQuote(i)) {
-      i++;
-      quoteCount++;
+  /// Some rows may lack the necessary value length.
+  /// Will pad string values to ensure the correct count is maintained.
+  void _fillRow() {
+    const emptyString = '';
+    for (; _cIndex < _tempTitles.length; _cIndex++) {
+      _row.add(_columnsMetaData[_cIndex].nullable ? null : emptyString);
+      _trackType(true);
     }
-    if (quoteCount > 1 && quoteCount.isEven) {
-      return quoteCount;
-    }
-    return 0;
   }
 
-  /// Cache each character.
-  /// If [skip] is true, the character will not be cached.
-  void _writeChar(String char, {required bool skip, VoidCallback? whenDone}) {
-    _valueCache.writeIfValid(char, skip);
-    whenDone?.call();
+  void _resetQuoteCount() => _quoteCount = 0;
+
+  void _seperateRow([RowSeperatorCB? callback]) {
+    if (_rIndex > 0) {
+      _fillRow();
+      _rows.add(_row);
+    } else {
+      _tempTitles = _row;
+    }
+    callback?.call(_row);
+    _cIndex = 0;
+    _valueCache.clear();
+    _row = [];
+    _rIndex++;
   }
 
   void _seperateValue([DelimeterSeperatorCB? callback]) {
@@ -161,28 +167,17 @@ final class CSVParser
     _cIndex++;
   }
 
-  void _seperateRow([RowSeperatorCB? callback]) {
-    if (_rIndex > 0) {
-      _fillRow();
-      _rows.add(_row);
-    } else {
-      _tempTitles = _row;
+  /// Will track contigious quotes
+  int _trackQuotes(int i, bool Function(int i) isDoubleQuote) {
+    var quoteCount = 0;
+    while (isDoubleQuote(i)) {
+      i++;
+      quoteCount++;
     }
-    callback?.call(_row);
-    _cIndex = 0;
-    _valueCache.clear();
-    _row = [];
-    _rIndex++;
-  }
-
-  /// Some rows may lack the necessary value length.
-  /// Will pad string values to ensure the correct count is maintained.
-  void _fillRow() {
-    const emptyString = '';
-    for (; _cIndex < _tempTitles.length; _cIndex++) {
-      _row.add(_columnsMetaData[_cIndex].nullable ? null : emptyString);
-      _trackType(true);
+    if (quoteCount > 1 && quoteCount.isEven) {
+      return quoteCount;
     }
+    return 0;
   }
 
   void _trackType([bool empty = false]) {
@@ -202,5 +197,10 @@ final class CSVParser
     );
   }
 
-  void _resetQuoteCount() => _quoteCount = 0;
+  /// Cache each character.
+  /// If [skip] is true, the character will not be cached.
+  void _writeChar(String char, {required bool skip, VoidCallback? whenDone}) {
+    _valueCache.writeIfValid(char, skip);
+    whenDone?.call();
+  }
 }

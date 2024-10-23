@@ -7,6 +7,16 @@ import '../extensions/string/name_formatting_extension.dart';
 import 'column_data.dart';
 
 class CLIConfig {
+  const CLIConfig({
+    required this.fallbackToStringOnNullableValue,
+    required this.csvPath,
+    required this.outputPath,
+    required this.tableName,
+    required this.tableColumns,
+    required this.enableTypeInference,
+    this.autoIncrementingIDColumnName,
+  });
+
   /// The file path to the CSV file that will be parsed.
   ///
   /// This is a required parameter that specifies the location of the CSV file
@@ -57,14 +67,12 @@ class CLIConfig {
   /// If `false`, the app will treat all values as strings by default.
   final bool enableTypeInference;
 
-  const CLIConfig({
-    required this.fallbackToStringOnNullableValue,
-    required this.csvPath,
-    required this.outputPath,
-    required this.tableName,
-    required this.tableColumns,
-    required this.enableTypeInference,
-  });
+  /// Name for default ID column which will auto increment on each insertion
+  /// to the curresponding table.
+  ///
+  /// If the [autoIncrementingIDColumnName] is not specified by the user
+  ///  the tool won't create an auto incrementing ID column.
+  final String? autoIncrementingIDColumnName;
 
   factory CLIConfig.fromMap(
     Map<String, dynamic> map, {
@@ -84,11 +92,13 @@ class CLIConfig {
           false,
       tableColumns: (map['table_columns'] as List? ?? [])
           .map(
-            (e) => ColumnData.fromMap(e as Map<String, String>),
+            (e) => ColumnData.fromMap(e as Map<String, dynamic>),
           )
           .toList(),
       enableTypeInference:
           bool.tryParse(map['enable_type_inference'].toString()) ?? true,
+      autoIncrementingIDColumnName:
+          map['auto_incrementing_id_column_name'] as String?,
     );
   }
 
@@ -112,6 +122,7 @@ class CLIConfig {
       'table_name': tableName,
       'fallback_to_string_on_nullable_value': fallbackToStringOnNullableValue,
       'enable_type_inference': enableTypeInference,
+      'auto_incrementing_id_column_name': autoIncrementingIDColumnName,
       'table_columns': tableColumns.map((column) => column.toMap()).toList(),
     };
   }
@@ -125,6 +136,7 @@ class CLIConfig {
     List<ColumnData>? tableColumns,
     bool? fallbackToStringOnNullableValue,
     bool? enableTypeInference,
+    String? autoIncrementingIdName,
   }) {
     return CLIConfig(
       csvPath: csvPath ?? this.csvPath,
@@ -134,22 +146,35 @@ class CLIConfig {
       fallbackToStringOnNullableValue: fallbackToStringOnNullableValue ??
           this.fallbackToStringOnNullableValue,
       enableTypeInference: enableTypeInference ?? this.enableTypeInference,
+      autoIncrementingIDColumnName:
+          autoIncrementingIdName ?? autoIncrementingIDColumnName,
     );
   }
 
-  CLIConfig compareColumn(List<ColumnData> parsedColumnData) {
+  CLIConfig compareColumn(List<ColumnData> actualColumnData) {
     if (tableColumns.isEmpty) {
-      return copyWith(tableColumns: parsedColumnData);
+      return copyWith(tableColumns: actualColumnData);
+    }
+    var extra = <ColumnData>{};
+
+    for (var thisColumn in tableColumns) {
+      var isExtra = true;
+      for (var column in actualColumnData) {
+        if (thisColumn == column) {
+          isExtra = false;
+          break;
+        }
+      }
+      if (isExtra) {
+        if (!thisColumn.nullable) {
+          throw Exception(
+            '''${thisColumn.name} isn't found in the csv, so it should be nullable''',
+          );
+        }
+        extra.add(thisColumn);
+      }
     }
 
-    if (tableColumns.length > parsedColumnData.length) {
-      final dif = tableColumns.length - parsedColumnData.length;
-      throw Exception(
-        '''$dif extra column found in the config file, 
-        Please verify and try again''',
-      );
-    }
-
-    return this;
+    return copyWith(tableColumns: [...actualColumnData, ...extra]);
   }
 }

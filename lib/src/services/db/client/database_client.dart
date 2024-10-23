@@ -3,7 +3,7 @@ import 'package:sqlite3/sqlite3.dart';
 import '../../../mixins/file_mixin.dart';
 import '../../../mixins/logger_mixin.dart';
 import '../../../mixins/sql_schema_mixin.dart';
-import '../../models/column_data.dart';
+import '../../../utils/models/column_data.dart';
 import 'client_base.dart';
 
 class DatabaseClient
@@ -19,23 +19,23 @@ class DatabaseClient
 
   @override
   void open(String fullPath) {
-    delete(fullPath);
     _database = sqlite3.open(fullPath);
   }
 
   @override
   void createTableAndInsert(
-    String tableName,
-    List<ColumnData> columns,
-    List<List<String?>> values,
-  ) {
+    String tableName, {
+    required List<ColumnData> columns,
+    required List<List<String?>> values,
+    String? defaultIDColumnName,
+  }) {
     if (!isOpen) {
       throw Exception('Should open the database before execute');
     }
     log('Table - $tableName creation started...');
     final tableCreationStatement = tableCreationQuery(
       tableName,
-      generateColumnsSchema(columns),
+      generateColumnsSchema(columns, defaultIDColumnName),
     );
 
     _database?.execute(tableCreationStatement.query);
