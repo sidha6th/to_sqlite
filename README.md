@@ -1,6 +1,6 @@
 # to_sqlite
 
-A simple and efficient package for converting CSV files into SQLite databases. The `to_sqlite` package streamlines the process of generating SQLite tables and inserting bulk data, making it easy to manage large datasets. With features like type inference and automatic model class generation based on your CSV structure, integrating SQLite into your Dart or Flutter projects has never been easier.
+A CLI tool that facilitates the conversion of CSV files into SQLite databases and generates corresponding model classes.
 
 ## Installation
 
@@ -90,7 +90,7 @@ Example: `toSqlite generate_db -f config.json`
   "enable_type_inference": true,
 
   /// Name for default ID column which will auto increment on each insertion
-  /// to the curresponding table.
+  /// to the corresponding table.
   ///
   /// Its optional field if this is not specified in the config
   /// the tool won't create any ID column.

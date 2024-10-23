@@ -1,7 +1,7 @@
 name: to_sqlite
 description: to_sqlite is a CLI tool which helps to convert CSV files into SQLite databases and model classes.
 
-version: 0.1.3
+version: 0.1.4
 repository: https://github.com/sidha6th/to_sqlite
 
 environment:
