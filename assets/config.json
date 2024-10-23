@@ -76,6 +76,13 @@
             "default": null,
             "primaryKey": false,
             "foreign_keys": []
+        },
+        {
+            "name": "extra added",
+            "type": "String",
+            "nullable": true,
+            "primaryKey": false,
+            "foreign_keys": []
         }
     ]
 }

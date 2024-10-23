@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 
 import '../extensions/string/name_formatting_extension.dart';
+import '../extensions/string/parser_exts.dart';
 import 'reference.dart';
 
 class ColumnData {
@@ -29,7 +30,7 @@ class ColumnData {
   factory ColumnData.fromMap(Map<String, dynamic> map) {
     return ColumnData(
       name: map['name'] as String,
-      type: map['type'] as Type?,
+      type: map['type'].toString().toType,
       nullable: map['nullable'] as bool? ?? false,
       defaultValue: map['default'] as String?,
       primaryKey: map['primaryKey'] as bool? ?? false,
