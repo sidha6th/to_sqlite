@@ -25,6 +25,16 @@ class SqliteGenerator
       onEnd: () => log('CSV Parsing Completed'),
     );
 
+    exists(join(args.outputPath, 'config.json'), test: (exists) {
+      if (exists) return;
+      final content = args.copyWith(tableColumns: parsedResult.titles).toJson();
+      write(
+        filePath: args.outputPath,
+        fileName: 'config.json',
+        content: content,
+      );
+    });
+
     args = args.compareColumn(parsedResult.titles);
     final databasePath = join(args.outputPath, Constants.dbFileName);
 
@@ -32,8 +42,9 @@ class SqliteGenerator
       ..open(databasePath)
       ..createTableAndInsert(
         args.tableName,
-        args.tableColumns,
-        parsedResult.values,
+        columns: args.tableColumns,
+        values: parsedResult.values,
+        defaultIDColumnName: args.autoIncrementingIDColumnName,
       );
   }
 }

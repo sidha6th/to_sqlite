@@ -4,8 +4,9 @@ abstract class IDatabaseClient {
   void open(String path);
 
   void createTableAndInsert(
-    String tableName,
-    List<ColumnData> columns,
-    List<List<String>> values,
-  );
+    String tableName, {
+    required List<ColumnData> columns,
+    required List<List<String>> values,
+    String? defaultIDColumnName,
+  });
 }

@@ -24,9 +24,11 @@ class ModelClassGenerator with LoggerMixin implements IGenerator<CSVParser> {
       onEnd: () => log('CSV parsed'),
     );
 
+    args = args.compareColumn(parsedResult.titles);
+
     await ModelClassTemplateGenerator.shared.generate(
       ModelClassTemplateArg(
-        fields: parsedResult.titles,
+        fields: args.tableColumns,
         className:
             split(withoutExtension(args.csvPath)).last.toUpperCamelCased ??
                 Constants.defModel,

@@ -10,3 +10,4 @@ pubspec.lock
 
 #misc
 assets/sample.csv
+assets/*.sqlite

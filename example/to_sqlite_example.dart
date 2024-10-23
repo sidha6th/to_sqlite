@@ -10,7 +10,7 @@ Future<void> main() async {
 }
 
 enum Task {
-  generateDB('generate_db', 'assets/config.json'),
+  generateDB('generate_db', 'assets/test.csv'),
   generateConfig('generate_config', 'assets/test.csv');
 
   final String command;

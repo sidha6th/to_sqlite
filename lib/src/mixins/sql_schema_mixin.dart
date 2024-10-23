@@ -1,25 +1,31 @@
-import '../utils/common/constants.dart';
 import '../utils/common/sql/sql_query_builder.dart';
 import '../utils/extensions/column_data_exts.dart';
 import '../utils/extensions/iterable_column_data_exts.dart';
 import '../utils/models/column_data.dart';
 
 mixin SqlSchemaMixin {
-  String generateColumnsSchema(List<ColumnData> columns) {
+  String generateColumnsSchema(
+    List<ColumnData> columns,
+    String? defaultIDColumnName,
+  ) {
     final schema = columns.map((e) {
       return e.schema;
     }).join(',');
 
+    final schemaWithDefaultID = defaultIDColumnName == null
+        ? schema
+        : '${_defaultID(defaultIDColumnName)},$schema';
+
     final foreignKeys = columns.sqlForeignKeysStatements?.join(',');
     if (foreignKeys == null) {
-      return schema;
+      return schemaWithDefaultID;
     }
-    return '$schema,$foreignKeys';
+    return '$schemaWithDefaultID,$foreignKeys';
   }
 
-  String _defaultID([String? name]) {
+  String _defaultID(String name) {
     return (SQL()
-          ..add(name ?? Constants.defTableIDName)
+          ..add(name)
           ..integer
           ..primaryKey
           ..autoIncrement)
