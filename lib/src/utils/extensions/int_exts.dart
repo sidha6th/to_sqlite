@@ -7,5 +7,5 @@ extension IntExts on int {
 
   bool get isAlphabet => isLowerCaseChar || isUppercaseChar;
 
-  bool get isUnderscore => this==95;
+  bool get isUnderscore => this == 95;
 }

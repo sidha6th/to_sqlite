@@ -11,7 +11,7 @@ class ConfigGenerator
     implements IGenerator<CSVParser> {
   const ConfigGenerator();
 
-  static const shared = ConfigGenerator();
+  static const IGenerator shared = ConfigGenerator();
 
   @override
   FutureOr<void> generate(CSVParser parser, CLIConfig args) async {
