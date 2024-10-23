@@ -23,4 +23,18 @@ extension StringParserExtension on String {
 
     return String;
   }
+
+  Type? get toType {
+    switch (this) {
+      case 'int':
+        return int;
+      case 'String':
+        return String;
+      case 'double':
+        return double;
+      case 'bool':
+        return bool;
+    }
+    return null;
+  }
 }

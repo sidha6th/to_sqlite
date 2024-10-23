@@ -84,7 +84,7 @@ class CLIConfig {
           false,
       tableColumns: (map['table_columns'] as List? ?? [])
           .map(
-            (e) => ColumnData.fromMap(e as Map<String, String>),
+            (e) => ColumnData.fromMap(e as Map<String, dynamic>),
           )
           .toList(),
       enableTypeInference:
@@ -137,19 +137,30 @@ class CLIConfig {
     );
   }
 
-  CLIConfig compareColumn(List<ColumnData> parsedColumnData) {
+  CLIConfig compareColumn(List<ColumnData> actualColumnData) {
     if (tableColumns.isEmpty) {
-      return copyWith(tableColumns: parsedColumnData);
+      return copyWith(tableColumns: actualColumnData);
+    }
+    var extra = <ColumnData>{};
+
+    for (var thisColumn in tableColumns) {
+      var isExtra = true;
+      for (var column in actualColumnData) {
+        if (thisColumn == column) {
+          isExtra = false;
+          break;
+        }
+      }
+      if (isExtra) {
+        if (!thisColumn.nullable) {
+          throw Exception(
+            '''${thisColumn.name} isn't found in the csv, so it should be nullable''',
+          );
+        }
+        extra.add(thisColumn);
+      }
     }
 
-    if (tableColumns.length > parsedColumnData.length) {
-      final dif = tableColumns.length - parsedColumnData.length;
-      throw Exception(
-        '''$dif extra column found in the config file, 
-        Please verify and try again''',
-      );
-    }
-
-    return this;
+    return copyWith(tableColumns: [...actualColumnData, ...extra]);
   }
 }
