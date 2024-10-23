@@ -1,4 +1,4 @@
-import '../../models/column_data.dart';
+import '../../../utils/models/column_data.dart';
 
 abstract class IDatabaseClient {
   void open(String path);

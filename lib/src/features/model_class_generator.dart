@@ -14,7 +14,7 @@ import '../utils/models/template_generator_args/model_class.dart';
 class ModelClassGenerator with LoggerMixin implements IGenerator<CSVParser> {
   const ModelClassGenerator();
 
-  static const shared = ModelClassGenerator();
+  static const IGenerator shared = ModelClassGenerator();
 
   @override
   FutureOr<void> generate(CSVParser parser, CLIConfig args) async {

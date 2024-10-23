@@ -3,7 +3,7 @@ import 'package:sqlite3/sqlite3.dart';
 import '../../../mixins/file_mixin.dart';
 import '../../../mixins/logger_mixin.dart';
 import '../../../mixins/sql_schema_mixin.dart';
-import '../../models/column_data.dart';
+import '../../../utils/models/column_data.dart';
 import 'client_base.dart';
 
 class DatabaseClient

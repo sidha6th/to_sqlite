@@ -1,15 +1,7 @@
 name: to_sqlite
-description:
-  A simple and efficient package to convert CSV files into SQLite databases.
-  `to_sqlite` streamlines the process of generating SQLite tables and inserting
-  bulk data, allowing you to manage large datasets with ease.
+description: to_sqlite is a CLI tool which helps to convert CSV files into SQLite databases and model classes.
 
-  With features like type inference and automatic model class generation based
-  on your CSV structure, this package makes it easy to integrate SQLite into
-  your Dart projects. Perfect for developers looking to simplify their database
-  management tasks.
-
-version: 0.1.1
+version: 0.1.3
 repository: https://github.com/sidha6th/to_sqlite
 
 environment:
